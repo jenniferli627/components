@@ -1,0 +1,173 @@
+<html lang="en" >
+  <head>
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css'>
+  </head>
+
+<body translate="no" >
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+
+<div id="app"></div>
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-1b93190375e9ccc259df3a57c1abc0e64599724ae30d7ea4c6877eb615f89387.js"></script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js'></script>
+<script src='https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js'></script>
+      <script id="rendered-js" >
+/* globals marked, Prism, React, ReactDOM */
+/* eslint-disable react/prop-types, no-nested-ternary */
+        
+// https://codepen.io/no_stack_dub_sack/pen/JbPZvm?editors=0110
+
+const projectName = 'markdown-previewer';
+
+// ALLOWS LINE BREAKS WITH RETURN BUTTON
+marked.setOptions({
+  breaks: true,
+  highlight: function (code) {
+    return Prism.highlight(code, Prism.languages.javascript, 'javascript');
+  } });
+
+
+// INSERTS target="_blank" INTO HREF TAGS
+const renderer = new marked.Renderer();
+renderer.link = function (href, title, text) {
+  return `<a target="_blank" href="${href}">${text}</a>`;
+};
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      markdown: placeholder,
+      editorMaximized: false,
+      previewMaximized: false };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleEditorMaximize = this.handleEditorMaximize.bind(this);
+    this.handlePreviewMaximize = this.handlePreviewMaximize.bind(this);
+  }
+  handleChange(event) {
+    this.setState({
+      markdown: event.target.value });
+
+  }
+  handleEditorMaximize() {
+    this.setState({
+      editorMaximized: !this.state.editorMaximized });
+
+  }
+  handlePreviewMaximize() {
+    this.setState({
+      previewMaximized: !this.state.previewMaximized });
+
+  }
+  render() {
+    const classes = this.state.editorMaximized ?
+    ['editorWrap maximized', 'previewWrap hide', 'fa fa-compress'] :
+    this.state.previewMaximized ?
+    ['editorWrap hide', 'previewWrap maximized', 'fa fa-compress'] :
+    ['editorWrap', 'previewWrap', 'fa fa-arrows-alt'];
+    return (
+      React.createElement("div", null, 
+      React.createElement("div", { className: classes[0] },
+      React.createElement(Toolbar, {
+        icon: classes[2],
+        onClick: this.handleEditorMaximize,
+        text: "Editor" }), 
+
+      React.createElement(Editor, { markdown: this.state.markdown, onChange: this.handleChange })), 
+
+      React.createElement("div", { className: "converter" }), 
+      React.createElement("div", { className: classes[1] }, 
+      React.createElement(Toolbar, {
+        icon: classes[2],
+        onClick: this.handlePreviewMaximize,
+        text: "Previewer" }), 
+
+      React.createElement(Preview, { markdown: this.state.markdown }))));
+
+  }}
+
+
+const Toolbar = props => {
+  return (
+    React.createElement("div", { className: "toolbar" }, 
+    React.createElement("i", { className: "fa fa-free-code-camp", title: "no-stack-dub-sack" }),
+    props.text, 
+    React.createElement("i", { className: props.icon, onClick: props.onClick })));
+
+};
+
+const Editor = props => {
+  return (
+    React.createElement("textarea", {
+      id: "editor",
+      onChange: props.onChange,
+      type: "text",
+      value: props.markdown }));
+
+};
+
+const Preview = props => {
+  return (
+    React.createElement("div", {
+      dangerouslySetInnerHTML: {
+        __html: marked(props.markdown, { renderer: renderer }) },
+      id: "preview" }));
+};
+
+const placeholder = `# Welcome to my React Markdown Previewer!
+
+## A sub-heading
+### Some cool things:
+
+Heres some code, \`<div></div>\`, between 2 backticks.
+
+\`\`\`
+// this is multi-line code:
+
+function anotherExample(firstLine, lastLine) {
+  if (firstLine == '\`\`\`' && lastLine == '\`\`\`') {
+    return multiLineCode;
+  }
+}
+\`\`\`
+
+You can also make text **bold**.
+Or _italic_.
+Or **_both!_**.
+And ~~crossing out~~.
+
+There's also [link_to_my_page](https://codepen.io/jenniferli627), and
+> Block Quotes!
+
+And tables:
+
+One Header | Two Header | Another Header
+------------ | ------------- | -------------
+content | content | content....
+And content | content | Okey.
+
+- Lists.
+  - Bulleted.
+     - With different indentation levels.
+        - Look like this.
+
+
+1. Numbered lists too.
+1. 123123...
+1. The last one is embedded images:
+
+![Batman Logo](https://logos-world.net/wp-content/uploads/2020/12/Batman-Logo-2011-2016.png)
+`;
+
+ReactDOM.render( React.createElement(App, null), document.getElementById('app'));
+//# sourceURL=pen.js
+    </script>
+
+</body>
+
+</html>
+ 
